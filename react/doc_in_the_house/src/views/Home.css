@@ -13,7 +13,7 @@ body {
 	align-items: center;
 }
 .background-zindex {
-	z-index: 2;
+	z-index: 1;
 	position: absolute;
 }
 .foreground-zindex {
@@ -34,7 +34,7 @@ body {
 
 .title {
 	font-weight: bolder;
-	font-size: 3em;
+	font-size: 2.5em;
 	margin: 8px;
 	font-family: "Montserrat", sans-serif;
 	color: #940543;
@@ -50,7 +50,7 @@ body {
 
 .doctor-img {
 	padding-top: 20px;
-	height: 90vh;
+	height: 95vh;
 	object-fit: contain;
 	align-self: end;
 }
@@ -69,6 +69,7 @@ body {
 	font-weight: 700;
 	cursor: pointer;
 	user-select: none;
+	transition: 0.5s;
 }
 
 .language-radio:hover {
