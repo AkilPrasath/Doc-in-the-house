@@ -8,7 +8,9 @@ export function BackgroundComponent({
 		<div className="home-container">
 			<ImageFadeIn
 				opacityTransition={2}
-				style={{ position: "absolute" }}
+				style={{
+					objectFit: "cover",
+				}}
 				className="home-container background-zindex"
 				src={backgroundImage}></ImageFadeIn>
 			<div className="foreground-zindex">{content}</div>

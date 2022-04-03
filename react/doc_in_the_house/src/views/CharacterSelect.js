@@ -11,6 +11,7 @@ import justin from "../assets/images/characters/Justin.png";
 
 import { useState } from "react";
 import { Fade } from "react-reveal";
+import { useNavigate, useSearchParams } from "react-router-dom";
 export function CharacterSelect() {
 	return <BackgroundComponent content={<Content />} />;
 }
@@ -95,9 +96,19 @@ function Content() {
 	);
 }
 
-function Character({ sequenceIndex, delay = 0, image, alt, name }) {
+export function Character({ sequenceIndex, delay = 0, image, alt, name }) {
+	const navigate = useNavigate();
+	const [params, setParams] = useSearchParams();
 	return (
-		<div className="flex-item">
+		<div
+			onClick={() => {
+				params.append("patient", name);
+				navigate({
+					pathname: "/stations/1",
+					search: "?" + params.toString(),
+				});
+			}}
+			className="flex-item">
 			<Animate
 				{...opacityAnimationProps}
 				sequenceIndex={sequenceIndex}
