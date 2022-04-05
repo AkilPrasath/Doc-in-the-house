@@ -88,7 +88,7 @@ export function HomeContent() {
 						}}></div>
 					<Fade right when={doctor}>
 						<img
-							className="doctor-img"
+							className="home-doctor-img"
 							alt="doctor"
 							src={doctorImg}
 						/>

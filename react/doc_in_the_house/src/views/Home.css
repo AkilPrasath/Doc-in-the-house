@@ -48,10 +48,11 @@ body {
 	font-family: "Montserrat", sans-serif;
 }
 
-.doctor-img {
+.home-doctor-img {
 	padding-top: 20px;
 	height: 95vh;
-	object-fit: contain;
+	width: auto;
+	object-fit: cover;
 	align-self: end;
 }
 .language-radio {
