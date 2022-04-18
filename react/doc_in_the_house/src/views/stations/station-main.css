@@ -6,8 +6,11 @@
 }
 .progress-bar-card {
 	margin-top: 20px;
-	width: 95%;
-	padding: 40px 30px 40px 20px;
+	width: 85%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	padding: 40px;
 	margin-left: 20px;
 	position: absolute;
 	right: 0;
@@ -15,30 +18,60 @@
 	border-top-left-radius: 20px;
 	border-bottom-left-radius: 20px;
 }
-
-.step-container {
+.bones-station-container {
+	height: 100%;
 	display: flex;
-	flex-direction: column;
-	align-items: center;
+	flex-direction: row;
+}
+.doctor-img {
+	object-fit: cover;
+	height: 100%;
+	width: auto;
+}
+.bones-station-content {
+	width: 100%;
+	padding: 16px;
+}
+.bones-station-card {
+	/* background-color: rgba(255, 255, 255, 0.63); */
+	border-radius: 20px;
+	height: 95%;
+	width: 97%;
+	padding: 16px 16px 0 16px;
 }
 
-.step {
-	height: 50px;
-	width: 50px;
+.bones-character-container {
+	height: 20vmin;
+	width: 20vmin;
+	padding: 12px;
+	margin-left: 20px;
+	background-color: #104b6d;
+	border-radius: 50%;
+}
+.patient-name {
+	padding: 12px;
+	margin-left: 20px;
+	font-size: 1.5rem;
+	text-align: center;
+	color: black;
+	font-family: "Montserrat", sans-serif;
+	font-weight: 800;
+}
+.nav-button {
+	margin: 0px 10px;
+	height: 10vmin;
+	width: 10vmin;
+	line-height: 10vmin;
 	border-radius: 50%;
 	text-align: center;
-}
-.step-text {
+	color: white;
 	font-family: "Montserrat", sans-serif;
 	font-weight: 600;
-	font-size: 1.4rem;
-	margin: 0px;
-	line-height: 50px;
-}
-.step-title {
-	font-family: "Montserrat", sans-serif;
-	font-weight: 600;
-	font-size: 1.4rem;
-	margin: 0px;
-	color: #104b6d;
+	background: rgb(2, 0, 36);
+	background: linear-gradient(
+		340deg,
+		rgba(2, 0, 36, 1) 0%,
+		rgba(16, 75, 109, 1) 57%,
+		rgba(45, 153, 170, 1) 100%
+	);
 }

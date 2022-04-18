@@ -2,13 +2,197 @@ import { BackgroundComponent } from "../../components/BackgroundComponent";
 import "react-step-progress-bar/styles.css";
 import "./station-main.css";
 import hospital from "../../assets/images/hospital-2.jpg";
-import { ProgressBar, Step } from "react-step-progress-bar";
 import { Fade } from "react-reveal";
-import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { StepProgressBar } from "../../components/StepProgressBar";
+import { PatientContext } from "../../App";
+import doctor from "../../assets/images/doctor_standing.png";
+import adam from "../../assets/images/characters/Adam.png";
+import brice from "../../assets/images/characters/Brice.png";
+import cam from "../../assets/images/characters/Cam.png";
+import casey from "../../assets/images/characters/Casey.png";
+import collette from "../../assets/images/characters/Collette.png";
+import justin from "../../assets/images/characters/Justin.png";
+import { Animate } from "react-simple-animate";
+import { Quiz } from "../Quiz";
+
+export const patientMap = {
+	Adam: adam,
+	Brice: brice,
+	Cam: cam,
+	Casey: casey,
+	Collette: collette,
+	Justin: justin,
+};
+const characterAnimationProps = {
+	start: {
+		opacity: 0,
+		transform: " scale(0.4) ",
+	},
+	end: {
+		opacity: 1,
+		transform: " scale(1)",
+	},
+};
+
 export function StationMain() {
+	const [params, setParams] = useSearchParams();
+	const patientData = useContext(PatientContext);
+	const [currentStationIndex, setCurrentStationIndex] = useState(0);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (!patientData["success"]) {
+			navigate(
+				{
+					pathname: "/character-select",
+					search: "?" + params.toString(),
+				},
+				{
+					replace: true,
+				}
+			);
+		} else {
+			navigate(
+				{
+					pathname: `/stations/${patientData["symptoms"][currentStationIndex]}`,
+					search: "?" + params.toString(),
+				},
+				{ replace: true }
+			);
+		}
+	}, [currentStationIndex]);
+	if (!patientData["success"]) {
+		return <div>Redirecting...</div>;
+	}
 	return (
-		<BackgroundComponent backgroundImage={hospital} content={<Content />} />
+		<BackgroundComponent
+			backgroundImage={hospital}
+			content={
+				<div className="station-container">
+					<Fade right>
+						<div className="progress-bar-card">
+							<div
+								style={{
+									width: "80%",
+								}}>
+								<StepProgressBar
+									titleList={
+										params.get("language") == "en-ES"
+											? patientData["symptoms-en-ES"]
+											: patientData["symptoms-en"]
+									}
+									progressRatio={
+										100 /
+										(patientData["symptoms_count"] - 1)
+									}
+									progress={currentStationIndex}
+								/>
+							</div>
+						</div>
+					</Fade>
+					<div
+						style={{
+							content: ".",
+							contentVisibility: "hidden",
+							height: "120px",
+						}}></div>
+
+					<div
+						style={{
+							height: "85%",
+						}}>
+						<div className="bones-station-container">
+							<Fade bottom>
+								<img
+									className="doctor-img"
+									alt="Doctor"
+									src={doctor}></img>
+							</Fade>
+
+							<div className="bones-station-content">
+								<div className="bones-station-card">
+									<div
+										style={{
+											display: "flex",
+											flexDirection: "row",
+											height: "100%",
+										}}>
+										<Outlet
+											context={{
+												index: currentStationIndex,
+											}}
+										/>
+										<Animate
+											play
+											delay={1.5}
+											{...characterAnimationProps}>
+											<img
+												className="bones-character-container"
+												alt={patientData["name"]}
+												src={
+													patientMap[
+														patientData["name"]
+													]
+												}
+											/>
+											<div className="patient-name">
+												{patientData["name"]}
+											</div>
+										</Animate>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						style={{
+							position: "absolute",
+							zIndex: "4",
+							bottom: "20px",
+							right: "20px",
+							display: "flex",
+							flexFlow: "row",
+						}}>
+						{currentStationIndex >= 1 && (
+							<div
+								onClick={() => {
+									setCurrentStationIndex(
+										currentStationIndex - 1
+									);
+								}}
+								className="nav-button">
+								Prev
+							</div>
+						)}
+
+						{/* {currentStationIndex <
+							patientData.symptoms_count - 1 && ( */}
+						<div
+							onClick={() => {
+								if (
+									currentStationIndex <
+									patientData.symptoms_count - 1
+								) {
+									setCurrentStationIndex(
+										currentStationIndex + 1
+									);
+								} else {
+									navigate({
+										pathname: "/quiz",
+										search: "?" + params.toString(),
+									});
+								}
+							}}
+							className="nav-button">
+							Next
+						</div>
+						{/*   )} */}
+					</div>
+				</div>
+			}
+		/>
 	);
 }
 
@@ -31,235 +215,9 @@ const apiData = {
 	},
 };
 
-const progressRatio = 8.333333333333333;
-function Content() {
-	const [progress, setProgress] = useState(1);
-	return (
-		<div className="station-container">
-			<Fade right>
-				<div className="progress-bar-card">
-					<ProgressBar
-						hasStepZero={false}
-						percent={
-							progress * progressRatio < 100
-								? progress * progressRatio
-								: 100
-						}
-						height={15}
-						filledBackground="linear-gradient(to right,  #2D99AA, #104B6D)">
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Bones"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Temp"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Heart"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Skin"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Urine"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Eyes"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Throat"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Snot"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Vomit"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Reflex"
-									/>
-								);
-							}}
-						</Step>
+// function Content() {
+// 	const [progress, setProgress] = useState(0);
+// 	return (
 
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Lungs"
-									/>
-								);
-							}}
-						</Step>
-						<Step transition="scale">
-							{({ accomplished, index }) => {
-								return (
-									<StepContent
-										accomplished={accomplished}
-										stepNumber={index + 1}
-										title="Food"
-									/>
-								);
-							}}
-						</Step>
-					</ProgressBar>
-				</div>
-			</Fade>
-
-			<div
-				style={{
-					content: ".",
-					contentVisibility: "hidden",
-					height: "120px",
-				}}></div>
-
-			<div
-				style={{
-					height: "85%",
-				}}>
-				<Outlet context={[apiData]} />
-			</div>
-			<div
-				style={{
-					position: "absolute",
-					zIndex: "4",
-					bottom: "20px",
-					right: "20px",
-					display: "flex",
-					flexFlow: "row",
-				}}>
-				{progress > 1 && (
-					<div
-						onClick={() => {
-							setProgress(progress - 1);
-						}}
-						style={{
-							height: "10vmin",
-							width: "10vmin",
-							lineHeight: "10vmin",
-							borderRadius: "50%",
-							backgroundColor: "red",
-							color: "white",
-							textAlign: "center",
-						}}>
-						Prev
-					</div>
-				)}
-				<div
-					onClick={() => {
-						setProgress(progress + 1);
-					}}
-					style={{
-						height: "10vmin",
-						width: "10vmin",
-						lineHeight: "10vmin",
-						borderRadius: "50%",
-						backgroundColor: "red",
-						color: "white",
-						textAlign: "center",
-					}}>
-					Next
-				</div>
-			</div>
-		</div>
-	);
-}
-
-function StepContent({ accomplished, stepNumber, title }) {
-	return (
-		<div className="step-container">
-			<div
-				className="step"
-				style={{
-					backgroundColor: accomplished ? "#104B6D" : "white",
-				}}>
-				<p
-					className="step-text"
-					style={{
-						color: accomplished ? "white" : "#104B6D",
-					}}>
-					{stepNumber}
-				</p>
-			</div>
-			<p className="step-title">{title}</p>
-		</div>
-	);
-}
+// 	);
+// }

@@ -9,11 +9,91 @@ import casey from "../assets/images/characters/Casey.png";
 import collette from "../assets/images/characters/Collette.png";
 import justin from "../assets/images/characters/Justin.png";
 
-import { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Fade } from "react-reveal";
 import { useNavigate, useSearchParams } from "react-router-dom";
-export function CharacterSelect() {
-	return <BackgroundComponent content={<Content />} />;
+import { Loading } from "../components/loading";
+const SetPatientDataContext = React.createContext();
+export function CharacterSelect({ setPatientData }) {
+	const [showMessage, setShowMessage] = useState(false);
+	const [showLoading, setShowLoading] = useState(false);
+	function messageFinish() {
+		setShowMessage(false);
+	}
+	return (
+		<SetPatientDataContext.Provider value={setPatientData}>
+			<BackgroundComponent
+				content={
+					<div
+						className=" home-container home-flex-box"
+						style={{ justifyContent: "center" }}>
+						<Fade bottom>
+							{showMessage ? (
+								<div className="character-card  message-card">
+									<AnimateGroup play>
+										<Animate
+											duration={1}
+											sequenceIndex={0}
+											{...questionsAnimationProps}
+											delay={1}>
+											<p className="message-text">
+												Have you ever wanted to be a
+												Doctor🩺 ?
+											</p>
+										</Animate>
+										<Animate
+											duration={1}
+											sequenceIndex={1}
+											{...questionsAnimationProps}
+											delay={1}>
+											<p className="message-text">
+												Then today can be your first day
+												to practice😁!
+											</p>
+										</Animate>
+										<Animate
+											duration={1}
+											sequenceIndex={2}
+											{...questionsAnimationProps}
+											delay={1}>
+											<p className="message-text">
+												We have some friends here today
+												that are not feeling well😣, so
+												we'll figure out what’s wrong
+												with them.
+											</p>
+										</Animate>
+										<Animate
+											duration={1}
+											sequenceIndex={3}
+											{...questionsAnimationProps}
+											delay={1}>
+											<div
+												onClick={() => {
+													messageFinish();
+												}}
+												className="go-button">
+												Let's Go!
+											</div>
+										</Animate>
+									</AnimateGroup>
+								</div>
+							) : (
+								<CharacterListBox
+									setShowLoading={setShowLoading}
+								/>
+							)}
+						</Fade>
+						{showLoading && (
+							<div className="loading-container">
+								<Loading />
+							</div>
+						)}
+					</div>
+				}
+			/>
+		</SetPatientDataContext.Provider>
+	);
 }
 const opacityAnimationProps = {
 	start: { opacity: 0 },
@@ -29,84 +109,69 @@ const questionsAnimationProps = {
 		transform: "translateX(0px)",
 	},
 };
-
-function Content() {
-	const [showMessage, setShowMessage] = useState(true);
-	function messageFinish() {
-		setShowMessage(false);
-	}
+function CharacterListBox({ setShowLoading }) {
+	const characters = ["Adam", "Brice", "Cam", "Casey", "Collette", "Justin"];
+	const characterImages = [adam, brice, cam, casey, collette, justin];
 	return (
-		<div
-			className=" home-container home-flex-box"
-			style={{ justifyContent: "center" }}>
-			<Fade bottom>
-				{showMessage ? (
-					<div className="character-card  message-card">
-						<AnimateGroup play>
-							<Animate
-								duration={1}
-								sequenceIndex={0}
-								{...questionsAnimationProps}
-								delay={1}>
-								<p className="message-text">
-									Have you ever wanted to be a Doctor🩺 ?
-								</p>
-							</Animate>
-							<Animate
-								duration={1}
-								sequenceIndex={1}
-								{...questionsAnimationProps}
-								delay={1}>
-								<p className="message-text">
-									Then today can be your first day to
-									practice😁!
-								</p>
-							</Animate>
-							<Animate
-								duration={1}
-								sequenceIndex={2}
-								{...questionsAnimationProps}
-								delay={1}>
-								<p className="message-text">
-									We have some friends here today that are not
-									feeling well😣, so we'll figure out what’s
-									wrong with them.
-								</p>
-							</Animate>
-							<Animate
-								duration={1}
-								sequenceIndex={3}
-								{...questionsAnimationProps}
-								delay={1}>
-								<div
-									onClick={() => {
-										messageFinish();
-									}}
-									className="go-button">
-									Let's Go!
-								</div>
-							</Animate>
-						</AnimateGroup>
-					</div>
-				) : (
-					<CharacterListBox />
-				)}
+		<div className="character-card">
+			<Fade top>
+				<p className="select-character-title">
+					Click on the patient to determine what is wrong.
+				</p>
 			</Fade>
+			<div className="character-card-flex-box">
+				<AnimateGroup play>
+					{characters.map((value, index) => {
+						return (
+							<Character
+								key={index}
+								setShowLoading={setShowLoading}
+								alt={value}
+								image={characterImages[index]}
+								name={value}
+								sequenceIndex={index}
+								delay={index === 0 ? 1.5 : 0}
+							/>
+						);
+					})}
+				</AnimateGroup>
+			</div>
 		</div>
 	);
 }
 
-export function Character({ sequenceIndex, delay = 0, image, alt, name }) {
+export function Character({
+	setShowLoading,
+	sequenceIndex,
+	delay = 0,
+	image,
+	alt,
+	name,
+}) {
 	const navigate = useNavigate();
-	const [params, setParams] = useSearchParams();
+
+	const [params] = useSearchParams();
+	const setPatientData = useContext(SetPatientDataContext);
 	return (
 		<div
 			onClick={() => {
-				params.append("patient", name);
-				navigate({
-					pathname: "/stations/1",
-					search: "?" + params.toString(),
-				});
+				const patientName = name;
+				setShowLoading(true);
+				fetch(`http://127.0.0.1:3001/patient?name=${patientName}`)
+					.then((response) => response.json())
+					.then((response) => {
+						console.log(response);
+						setPatientData(response);
+						setShowLoading(false);
+						navigate({
+							pathname: `/stations`,
+							search: "?" + params.toString(),
+						});
+					})
+					.catch((error) => {
+						console.log(error);
+						setShowLoading(false);
+					});
 			}}
 			className="flex-item">
 			<Animate
@@ -118,58 +183,6 @@ export function Character({ sequenceIndex, delay = 0, image, alt, name }) {
 				</div>
 				<p className="character-name">{name}</p>
 			</Animate>
-		</div>
-	);
-}
-function CharacterListBox() {
-	return (
-		<div className="character-card">
-			<Fade top>
-				<p className="select-character-title">
-					Pick a Patient to continue...
-				</p>
-			</Fade>
-			<div className="character-card-flex-box">
-				<AnimateGroup play>
-					<Character
-						alt={"Adam"}
-						image={adam}
-						name={"Adam"}
-						sequenceIndex={0}
-						delay={1.5}
-					/>
-					<Character
-						alt={"Brice"}
-						image={brice}
-						name={"Brice"}
-						sequenceIndex={1}
-					/>
-					<Character
-						alt={"Cam"}
-						image={cam}
-						name={"Cam"}
-						sequenceIndex={2}
-					/>
-					<Character
-						alt={"Casey"}
-						image={casey}
-						name={"Casey"}
-						sequenceIndex={3}
-					/>
-					<Character
-						alt={"Collette"}
-						image={collette}
-						name={"Collette"}
-						sequenceIndex={4}
-					/>
-					<Character
-						alt={"Justin"}
-						image={justin}
-						name={"Justin"}
-						sequenceIndex={5}
-					/>
-				</AnimateGroup>
-			</div>
 		</div>
 	);
 }
