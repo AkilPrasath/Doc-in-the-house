@@ -10,12 +10,19 @@ export function StepProgressBar({ progressRatio, titleList, progress }) {
 			height={15}
 			filledBackground="linear-gradient(to right,  #2D99AA, #104B6D)">
 			{titleList.map((val, index) => {
-				return <StationStep key={index} name={val} />;
+				return (
+					<StationStep
+						key={index}
+						currentProgress={progress}
+						name={val}
+						totalSteps={titleList.length}
+					/>
+				);
 			})}
 		</ProgressBar>
 	);
 }
-function StationStep({ name, ...props }) {
+function StationStep({ totalSteps, name, currentProgress, ...props }) {
 	return (
 		<Step
 			{...props}
@@ -25,13 +32,21 @@ function StationStep({ name, ...props }) {
 					<StepContent
 						accomplished={accomplished}
 						stepNumber={index + 1}
+						currentProgress={currentProgress}
 						title={name}
+						totalSteps={totalSteps}
 					/>
 				);
 			}}></Step>
 	);
 }
-function StepContent({ accomplished, stepNumber, title }) {
+function StepContent({
+	totalSteps,
+	accomplished,
+	currentProgress,
+	stepNumber,
+	title,
+}) {
 	return (
 		<div className="step-container">
 			<div
@@ -47,7 +62,13 @@ function StepContent({ accomplished, stepNumber, title }) {
 					{stepNumber}
 				</p>
 			</div>
-			<p className="step-title">{title}</p>
+			{totalSteps <= 5 ? (
+				<p className="step-title">{title}</p>
+			) : (
+				currentProgress == stepNumber - 1 && (
+					<p className="step-title">{title}</p>
+				)
+			)}
 		</div>
 	);
 }

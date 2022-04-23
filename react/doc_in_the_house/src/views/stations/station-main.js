@@ -8,21 +8,21 @@ import { useContext, useEffect, useState } from "react";
 import { StepProgressBar } from "../../components/StepProgressBar";
 import { PatientContext } from "../../App";
 import doctor from "../../assets/images/doctor_standing.png";
-import adam from "../../assets/images/characters/Adam.png";
-import brice from "../../assets/images/characters/Brice.png";
+import kevin from "../../assets/images/characters/Kevin.png";
 import cam from "../../assets/images/characters/Cam.png";
+import miguel from "../../assets/images/characters/Miguel.png";
 import casey from "../../assets/images/characters/Casey.png";
-import collette from "../../assets/images/characters/Collette.png";
+import anna from "../../assets/images/characters/Anna.png";
 import justin from "../../assets/images/characters/Justin.png";
 import { Animate } from "react-simple-animate";
 import { Quiz } from "../Quiz";
 
 export const patientMap = {
-	Adam: adam,
-	Brice: brice,
+	Kevin: kevin,
 	Cam: cam,
+	Miguel: miguel,
 	Casey: casey,
-	Collette: collette,
+	Anna: anna,
 	Justin: justin,
 };
 const characterAnimationProps = {
@@ -167,8 +167,6 @@ export function StationMain() {
 							</div>
 						)}
 
-						{/* {currentStationIndex <
-							patientData.symptoms_count - 1 && ( */}
 						<div
 							onClick={() => {
 								if (
@@ -188,7 +186,6 @@ export function StationMain() {
 							className="nav-button">
 							Next
 						</div>
-						{/*   )} */}
 					</div>
 				</div>
 			}

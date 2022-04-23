@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Fade } from "react-reveal";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Animate, AnimateGroup } from "react-simple-animate";
 import Shake from "react-reveal/Shake";
 import RubberBand from "react-reveal/RubberBand";
 import "./QuizCard.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const quizAnimationProps = {
 	start: {
 		opacity: 0,
@@ -16,7 +18,6 @@ const quizAnimationProps = {
 	},
 };
 export function QuizCard({ quizData, onCorrectOption }) {
-	const navigate = useNavigate();
 	var options = [];
 	if (quizData !== undefined) {
 		options = quizData["options"];
@@ -33,7 +34,22 @@ export function QuizCard({ quizData, onCorrectOption }) {
 	const [answerTriggers, setAnswerTriggers] = useState(optionTriggers);
 
 	function optionClick(index) {
+		const selectedLanguage =
+			params.get("language") == "en-ES" ? "en-ES" : "en";
 		if (!answerTriggers[index]) {
+			if (options[index].correct) {
+				//TODO: Later
+				// const audioFile = require(`../assets/audio/generic/${selectedLanguage}/correct.wav`);
+				// const correctSound = new Audio(audioFile);
+				// correctSound.play().catch((error) => console.log(error));
+				toast.success("Correct!");
+			} else {
+				//TODO: Later
+				// const audioFile = require(`../assets/audio/generic/${selectedLanguage}/wrong.wav`);
+				// const wrongSound = new Audio(audioFile);
+				// wrongSound.play().catch((error) => console.log(error));
+				toast.error("No, that's not the right one. Try again!");
+			}
 			var newAnswerTriggers = [...answerTriggers];
 			newAnswerTriggers[index] = true;
 			setAnswerTriggers(newAnswerTriggers);
@@ -42,6 +58,16 @@ export function QuizCard({ quizData, onCorrectOption }) {
 			setSpies(newSpies);
 		}
 	}
+	useEffect(() => {
+		//TODO: Later
+		// const selectedLanguage =
+		// 	params.get("language") == "en-ES" ? "en-ES" : "en";
+		// const audioFile = require(`../assets/audio/generic/${selectedLanguage}/quiz_question.wav`);
+		// const questionAudio = new Audio(audioFile);
+		// setTimeout(() => {
+		// 	questionAudio.play().catch((error) => console.log(error));
+		// }, 1500);
+	}, []);
 	useEffect(() => {
 		// answerTriggers.forEach((value, index) => {
 		// 	if (value) {
@@ -58,7 +84,7 @@ export function QuizCard({ quizData, onCorrectOption }) {
 			if (option.correct && answerTriggers[index]) {
 				setTimeout(() => {
 					onCorrectOption();
-				}, 2000);
+				}, 3000);
 			}
 		});
 	}, [answerTriggers]);
@@ -72,8 +98,8 @@ export function QuizCard({ quizData, onCorrectOption }) {
 						{...quizAnimationProps}>
 						<div className="question">
 							{params.get("language") == "en-ES"
-								? quizData["question"]["en-ES"]
-								: quizData["question"]["en"]}
+								? "¿Cuál crees que es la enfermedad?"
+								: "What do you think the illness is?"}
 						</div>
 					</Animate>
 					<div className="options-box">
@@ -123,6 +149,17 @@ export function QuizCard({ quizData, onCorrectOption }) {
 						})}
 					</div>
 				</AnimateGroup>
+				<ToastContainer
+					position="bottom-center"
+					autoClose={3500}
+					hideProgressBar
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover={false}
+				/>
 			</div>
 		</Fade>
 	);

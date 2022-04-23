@@ -47,7 +47,14 @@
 	overflow: hidden;
 	margin: 15px;
 }
-
+.c-character-container {
+	height: 15vmin;
+	width: 15vmin;
+	padding: 12px;
+	margin: 8px;
+	background-color: #940543;
+	border-radius: 50%;
+}
 .character {
 	object-fit: contain;
 	height: 15vh;
@@ -61,7 +68,7 @@
 	}
 }
 .character-name {
-	font-size: 2rem;
+	font-size: 1.75rem;
 	margin: 0px;
 	font-family: "Montserrat", sans-serif;
 	font-weight: 500;

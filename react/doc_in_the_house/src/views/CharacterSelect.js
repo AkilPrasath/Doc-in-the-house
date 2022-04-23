@@ -2,24 +2,41 @@ import { Animate, AnimateGroup } from "react-simple-animate";
 import { BackgroundComponent } from "../components/BackgroundComponent";
 import "./Home.css";
 import "./CharacterSelect.css";
-import adam from "../assets/images/characters/Adam.png";
-import brice from "../assets/images/characters/Brice.png";
+import kevin from "../assets/images/characters/Kevin.png";
 import cam from "../assets/images/characters/Cam.png";
+import miguel from "../assets/images/characters/Miguel.png";
 import casey from "../assets/images/characters/Casey.png";
-import collette from "../assets/images/characters/Collette.png";
+import anna from "../assets/images/characters/Anna.png";
 import justin from "../assets/images/characters/Justin.png";
 
 import React, { useContext, useState } from "react";
 import { Fade } from "react-reveal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loading } from "../components/loading";
+import { useEffect } from "react";
 const SetPatientDataContext = React.createContext();
 export function CharacterSelect({ setPatientData }) {
-	const [showMessage, setShowMessage] = useState(false);
+	const [showMessage, setShowMessage] = useState(true);
 	const [showLoading, setShowLoading] = useState(false);
+	const [params] = useSearchParams();
 	function messageFinish() {
 		setShowMessage(false);
 	}
+	useEffect(() => {
+		const selectedLanguage =
+			params.get("language") == "en-ES" ? "en-ES" : "en";
+		//TODO: Later
+		// const audioFile = require(`../assets/audio/generic/${selectedLanguage}/character_select.wav`);
+		// const audio = new Audio(audioFile);
+		// setTimeout(() => {
+		// 	audio.play().catch((error) => {
+		// 		console.log(error);
+		// 	});
+		// }, 1500);
+		// return () => {
+		// 	audio.pause();
+		// };
+	}, []);
 	return (
 		<SetPatientDataContext.Provider value={setPatientData}>
 			<BackgroundComponent
@@ -37,8 +54,10 @@ export function CharacterSelect({ setPatientData }) {
 											{...questionsAnimationProps}
 											delay={1}>
 											<p className="message-text">
-												Have you ever wanted to be a
-												Doctor🩺 ?
+												{params.get("language") ==
+												"en-ES"
+													? "¿Alguna vez has querido ser médico?"
+													: "Have you ever wanted to be a Doctor🩺 ?"}
 											</p>
 										</Animate>
 										<Animate
@@ -47,8 +66,10 @@ export function CharacterSelect({ setPatientData }) {
 											{...questionsAnimationProps}
 											delay={1}>
 											<p className="message-text">
-												Then today can be your first day
-												to practice😁!
+												{params.get("language") ==
+												"en-ES"
+													? "Entonces hoy puede ser tu primer día para practicar"
+													: "Then today can be your first day to practice😁!"}
 											</p>
 										</Animate>
 										<Animate
@@ -57,10 +78,13 @@ export function CharacterSelect({ setPatientData }) {
 											{...questionsAnimationProps}
 											delay={1}>
 											<p className="message-text">
-												We have some friends here today
+												{params.get("language") ==
+												"en-ES"
+													? "Tenemos algunos amigos aquí hoy que no se sienten bien 😣, así que averiguaremos qué les pasa."
+													: `We have some friends here today
 												that are not feeling well😣, so
 												we'll figure out what’s wrong
-												with them.
+												with them.`}
 											</p>
 										</Animate>
 										<Animate
@@ -73,7 +97,10 @@ export function CharacterSelect({ setPatientData }) {
 													messageFinish();
 												}}
 												className="go-button">
-												Let's Go!
+												{params.get("language") ==
+												"en-ES"
+													? "Vamos"
+													: "Let's Go!"}
 											</div>
 										</Animate>
 									</AnimateGroup>
@@ -110,13 +137,16 @@ const questionsAnimationProps = {
 	},
 };
 function CharacterListBox({ setShowLoading }) {
-	const characters = ["Adam", "Brice", "Cam", "Casey", "Collette", "Justin"];
-	const characterImages = [adam, brice, cam, casey, collette, justin];
+	const characters = ["Kevin", "Cam", "Miguel", "Casey", "Anna", "Justin"];
+	const characterImages = [kevin, cam, miguel, casey, anna, justin];
+	const [params] = useSearchParams();
 	return (
 		<div className="character-card">
 			<Fade top>
 				<p className="select-character-title">
-					Click on the patient to determine what is wrong.
+					{params.get("language") == "en-ES"
+						? "Haz clic en el paciente para determinar qué está mal. "
+						: "Click on the patient to determine what is wrong."}
 				</p>
 			</Fade>
 			<div className="character-card-flex-box">
@@ -178,9 +208,9 @@ export function Character({
 				{...opacityAnimationProps}
 				sequenceIndex={sequenceIndex}
 				delay={delay}>
-				<div className="character-container">
-					<img className="character" src={image} alt={alt} />
-				</div>
+				{/* <div className="character-container"> */}
+				<img className="c-character-container" src={image} alt={alt} />
+				{/* </div> */}
 				<p className="character-name">{name}</p>
 			</Animate>
 		</div>

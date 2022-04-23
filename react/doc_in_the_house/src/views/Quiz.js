@@ -6,11 +6,11 @@ import { PatientContext } from "../App";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { QuizCard } from "../components/QuizCard";
 import { Fade } from "react-reveal";
-import adam from "../assets/images/characters/Adam.png";
-import brice from "../assets/images/characters/Brice.png";
+import kevin from "../assets/images/characters/Kevin.png";
 import cam from "../assets/images/characters/Cam.png";
+import miguel from "../assets/images/characters/Miguel.png";
 import casey from "../assets/images/characters/Casey.png";
-import collette from "../assets/images/characters/Collette.png";
+import anna from "../assets/images/characters/Anna.png";
 import justin from "../assets/images/characters/Justin.png";
 import { patientMap } from "./stations/station-main.js";
 export function Quiz() {
@@ -52,6 +52,27 @@ export function Quiz() {
 					) : (
 						<InfoCard infoData={infoData} />
 					)}
+					{showInfo && (
+						<div
+							style={{
+								position: "absolute",
+								zIndex: "4",
+								bottom: "20px",
+								right: "20px",
+								display: "flex",
+								flexFlow: "row",
+							}}>
+							<div
+								className="quiz-nav-button"
+								onClick={() => {
+									navigate({
+										pathname: `/`,
+									});
+								}}>
+								Finish
+							</div>
+						</div>
+					)}
 				</div>
 			}
 		/>
@@ -61,6 +82,29 @@ export function Quiz() {
 function InfoCard({ infoData }) {
 	const patientData = useContext(PatientContext);
 	const [params] = useSearchParams();
+	useEffect(() => {
+		//TODO: Later
+		// const selectedLanguage =
+		// 	params.get("language") == "en-ES" ? "en-ES" : "en";
+		// const title = require(`../assets/audio/${patientData["name"]}/${selectedLanguage}/title.wav`);
+		// const diagnosis = require(`../assets/audio/${patientData["name"]}/${selectedLanguage}/diagnosis.wav`);
+		// const titleAudio = new Audio(title);
+		// const diagnosisAudio = new Audio(diagnosis);
+		// setTimeout(() => {
+		// 	titleAudio.play().catch((error) => console.log(error));
+		// 	titleAudio.addEventListener("ended", () => {
+		// 		diagnosisAudio.play().catch((error) => console.log(error));
+		// 	});
+		// }, 1000);
+		// return () => {
+		// 	try {
+		// 		titleAudio.pause();
+		// 		diagnosisAudio.pause();
+		// 	} catch (err) {
+		// 		console.log(err);
+		// 	}
+		// };
+	}, []);
 	return (
 		<Fade bottom>
 			<div className="info-card">
@@ -81,6 +125,16 @@ function InfoCard({ infoData }) {
 							: infoData["content"]["en"]}
 					</p>
 				</div>
+				<div className="info-title">
+					{params.get("language") == "en-ES"
+						? "Tratamiento"
+						: "Treatment"}
+				</div>
+				<p className="info-content">
+					{params.get("language") == "en-ES"
+						? infoData["treatment"]["en-ES"]
+						: infoData["treatment"]["en"]}
+				</p>
 			</div>
 		</Fade>
 	);

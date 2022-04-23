@@ -17,6 +17,9 @@
 	padding: 32px;
 	display: flex;
 	flex-direction: column;
+	justify-content: space-evenly;
+	/* justify-content: center; */
+	overflow-y: auto;
 }
 .info-disease-container {
 	display: flex;
@@ -42,6 +45,24 @@
 	font-weight: 600;
 	font-size: 1.5rem;
 	padding: 8px 24px;
-	margin-top: 0px;
+	margin: 0px;
 	text-align: justify;
+}
+.quiz-nav-button {
+	margin: 0px 10px;
+	height: 10vmin;
+	width: 10vmin;
+	line-height: 10vmin;
+	border-radius: 50%;
+	text-align: center;
+	color: white;
+	font-family: "Montserrat", sans-serif;
+	font-weight: 600;
+	background: rgb(2, 0, 36);
+	background: linear-gradient(
+		340deg,
+		rgba(2, 0, 36, 1) 0%,
+		rgba(16, 75, 109, 1) 57%,
+		rgba(45, 153, 170, 1) 100%
+	);
 }

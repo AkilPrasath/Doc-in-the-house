@@ -8,7 +8,21 @@ import React, { useState } from "react";
 import { Quiz } from "./views/Quiz";
 
 export const PatientContext = React.createContext();
-
+const stations = [
+	"bones",
+	"chest",
+	"lung",
+	"heart",
+	"vision",
+	"hunger",
+	"fatigue",
+	"fever",
+	"skin",
+	"vomit",
+	"urine",
+	"throat",
+	"snot",
+];
 function App() {
 	const [patientData, setPatientData] = useState({
 		success: false,
@@ -26,8 +40,13 @@ function App() {
 					/>
 					<Route path="quiz" element={<Quiz />} />
 					<Route path="stations" element={<StationMain />}>
-						<Route
-							exact
+						{stations.map((value, index) => (
+							<Route
+								path={stations[index]}
+								element={<StationContent key={index} />}
+							/>
+						))}
+						{/* <Route
 							path="bones"
 							element={<StationContent key={1} />}
 						/>
@@ -48,28 +67,33 @@ function App() {
 						/>
 						<Route
 							exact
-							path="eyes"
-							element={<StationContent key={4} />}
+							path="vision"
+							element={<StationContent key={5} />}
 						/>
 						<Route
 							exact
-							path="food"
-							element={<StationContent key={4} />}
+							path="hunger"
+							element={<StationContent key={6} />}
 						/>
 						<Route
 							exact
 							path="fatigue"
-							element={<StationContent key={4} />}
+							element={<StationContent key={7} />}
 						/>
 						<Route
 							exact
-							path="temp"
-							element={<StationContent key={4} />}
+							path="fever"
+							element={<StationContent key={8} />}
+						/>
+						<Route
+							exact
+							path="red_skin"
+							element={<StationContent key={9} />}
 						/>
 						<Route
 							exact
 							path="skin"
-							element={<StationContent key={4} />}
+							element={<StationContent key={10} />}
 						/>
 						<Route
 							exact
@@ -90,7 +114,7 @@ function App() {
 							exact
 							path="snot"
 							element={<StationContent key={4} />}
-						/>
+						/> */}
 					</Route>
 				</Routes>
 			</Router>

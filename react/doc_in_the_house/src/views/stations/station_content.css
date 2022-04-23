@@ -17,6 +17,7 @@
 	font-size: 1.5rem;
 	margin: 0 0 1rem auto;
 	padding: 2.5rem 2rem;
+	overflow-y: auto;
 }
 
 .imessage p {
