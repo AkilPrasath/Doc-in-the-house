@@ -187,7 +187,9 @@ export function Character({
 			onClick={() => {
 				const patientName = name;
 				setShowLoading(true);
-				fetch(`http://127.0.0.1:3001/patient?name=${patientName}`)
+				fetch(
+					`https://doc-in-the-house.herokuapp.com/patient?name=${patientName}`
+				)
 					.then((response) => response.json())
 					.then((response) => {
 						console.log(response);
