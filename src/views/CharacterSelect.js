@@ -188,7 +188,7 @@ export function Character({
 				const patientName = name;
 				setShowLoading(true);
 				fetch(
-					`https://doc-in-the-house.herokuapp.com/patient?name=${patientName}`
+					`https://doc-in-the-house-node.herokuapp.com/patient?name=${patientName}`
 				)
 					.then((response) => response.json())
 					.then((response) => {
