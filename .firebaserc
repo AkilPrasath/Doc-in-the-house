@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "doc-in-the-house"
+  },
+  "targets": {
+    "doc-in-the-house": {
+      "hosting": {
+        "react-ui": [
+          "doc-in-the-house"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
