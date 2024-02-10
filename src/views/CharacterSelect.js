@@ -14,6 +14,7 @@ import { Fade } from "react-reveal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loading } from "../components/loading";
 import { useEffect } from "react";
+import { baseURL } from "../utils/constants";
 const SetPatientDataContext = React.createContext();
 export function CharacterSelect({ setPatientData }) {
 	const [showMessage, setShowMessage] = useState(true);
@@ -23,9 +24,9 @@ export function CharacterSelect({ setPatientData }) {
 		setShowMessage(false);
 	}
 	useEffect(() => {
-		const selectedLanguage =
-			params.get("language") == "en-ES" ? "en-ES" : "en";
 		//TODO: Later
+		// const selectedLanguage =
+		// 	params.get("language") === "en-ES" ? "en-ES" : "en";
 		// const audioFile = require(`../assets/audio/generic/${selectedLanguage}/character_select.wav`);
 		// const audio = new Audio(audioFile);
 		// setTimeout(() => {
@@ -54,7 +55,7 @@ export function CharacterSelect({ setPatientData }) {
 											{...questionsAnimationProps}
 											delay={1}>
 											<p className="message-text">
-												{params.get("language") ==
+												{params.get("language") ===
 												"en-ES"
 													? "¿Alguna vez has querido ser médico?"
 													: "Have you ever wanted to be a Doctor🩺 ?"}
@@ -66,7 +67,7 @@ export function CharacterSelect({ setPatientData }) {
 											{...questionsAnimationProps}
 											delay={1}>
 											<p className="message-text">
-												{params.get("language") ==
+												{params.get("language") ===
 												"en-ES"
 													? "Entonces hoy puede ser tu primer día para practicar"
 													: "Then today can be your first day to practice😁!"}
@@ -78,7 +79,7 @@ export function CharacterSelect({ setPatientData }) {
 											{...questionsAnimationProps}
 											delay={1}>
 											<p className="message-text">
-												{params.get("language") ==
+												{params.get("language") ===
 												"en-ES"
 													? "Tenemos algunos amigos aquí hoy que no se sienten bien 😣, así que averiguaremos qué les pasa."
 													: `We have some friends here today
@@ -97,7 +98,7 @@ export function CharacterSelect({ setPatientData }) {
 													messageFinish();
 												}}
 												className="go-button">
-												{params.get("language") ==
+												{params.get("language") ===
 												"en-ES"
 													? "Vamos"
 													: "Let's Go!"}
@@ -144,7 +145,7 @@ function CharacterListBox({ setShowLoading }) {
 		<div className="character-card">
 			<Fade top>
 				<p className="select-character-title">
-					{params.get("language") == "en-ES"
+					{params.get("language") === "en-ES"
 						? "Haz clic en el paciente para determinar qué está mal. "
 						: "Click on the patient to determine what is wrong."}
 				</p>
@@ -188,7 +189,7 @@ export function Character({
 				const patientName = name;
 				setShowLoading(true);
 				fetch(
-					`https://doc-in-the-house-node.herokuapp.com/patient?name=${patientName}`
+					`${baseURL}/patient?name=${patientName}`
 				)
 					.then((response) => response.json())
 					.then((response) => {
